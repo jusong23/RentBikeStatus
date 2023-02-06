@@ -16,6 +16,8 @@
 		75280019299083ED004F3448 /* RentBikeStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75280018299083ED004F3448 /* RentBikeStatus.swift */; };
 		7528001B29908435004F3448 /* RentBikeStausCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528001A29908435004F3448 /* RentBikeStausCell.swift */; };
 		7528001D299089B4004F3448 /* OpenWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528001C299089B4004F3448 /* OpenWeather.swift */; };
+		7528002029909D29004F3448 /* GetOpenWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528001F29909D29004F3448 /* GetOpenWeather.swift */; };
+		752800222990B84D004F3448 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752800212990B84D004F3448 /* NetworkError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		75280018299083ED004F3448 /* RentBikeStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentBikeStatus.swift; sourceTree = "<group>"; };
 		7528001A29908435004F3448 /* RentBikeStausCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RentBikeStausCell.swift; sourceTree = "<group>"; };
 		7528001C299089B4004F3448 /* OpenWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenWeather.swift; sourceTree = "<group>"; };
+		7528001F29909D29004F3448 /* GetOpenWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOpenWeather.swift; sourceTree = "<group>"; };
+		752800212990B84D004F3448 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		7528FFFE299082A8004F3448 /* RentBikeStatus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RentBikeStatus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A5C8AAAD49A4FA48F8B4698C /* Pods-RentBikeStatus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RentBikeStatus.debug.xcconfig"; path = "Target Support Files/Pods-RentBikeStatus/Pods-RentBikeStatus.debug.xcconfig"; sourceTree = "<group>"; };
 		BF8B521C19E6B976B2897DC7 /* Pods-RentBikeStatus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RentBikeStatus.release.xcconfig"; path = "Target Support Files/Pods-RentBikeStatus/Pods-RentBikeStatus.release.xcconfig"; sourceTree = "<group>"; };
@@ -58,6 +62,7 @@
 		75280000299082A8004F3448 /* RentBikeStatus */ = {
 			isa = PBXGroup;
 			children = (
+				7528001E29909CF0004F3448 /* Network */,
 				75280016299083CE004F3448 /* Model */,
 				75280015299083C8004F3448 /* Cell */,
 				75280001299082A8004F3448 /* AppDelegate.swift */,
@@ -85,6 +90,15 @@
 				75280018299083ED004F3448 /* RentBikeStatus.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		7528001E29909CF0004F3448 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				7528001F29909D29004F3448 /* GetOpenWeather.swift */,
+				752800212990B84D004F3448 /* NetworkError.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 		7528FFF5299082A8004F3448 = {
@@ -228,6 +242,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7528001D299089B4004F3448 /* OpenWeather.swift in Sources */,
+				752800222990B84D004F3448 /* NetworkError.swift in Sources */,
+				7528002029909D29004F3448 /* GetOpenWeather.swift in Sources */,
 				75280006299082A8004F3448 /* ViewController.swift in Sources */,
 				75280002299082A8004F3448 /* AppDelegate.swift in Sources */,
 				7528001B29908435004F3448 /* RentBikeStausCell.swift in Sources */,

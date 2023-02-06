@@ -15,7 +15,7 @@ struct RentBikeStatus: Codable {
 // MARK: - RentBikeStatusClass
 struct RentBikeStatusClass: Codable {
     let listTotalCount: Int
-    let result: Result
+    let result: Result_
     let row: [Row]
 
     enum CodingKeys: String, CodingKey {
@@ -26,7 +26,7 @@ struct RentBikeStatusClass: Codable {
 }
 
 // MARK: - Result
-struct Result: Codable {
+struct Result_: Codable {
     let code, message: String
 
     enum CodingKeys: String, CodingKey {

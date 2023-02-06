@@ -16,15 +16,21 @@ public class SimpleError: Error {
 class ViewController: UITableViewController {
     private let rentBikeStatus = PublishSubject<RentBikeStatus>()
     private let row = BehaviorSubject<[Row]>(value: [])
-    
+
     private let openWeather = PublishSubject<OpenWeather>()
-    
+
     private let disposeBag = DisposeBag()
-    
+
+    var getOpenWeather = GetOpenWeather()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        let button = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusBikeInfo))
-        self.navigationItem.rightBarButtonItem = button
+        let rightButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusBikeInfo))
+        self.navigationItem.rightBarButtonItem = rightButton
+        
+        let leftButton = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(test))
+        self.navigationItem.leftBarButtonItem = leftButton
+        
         title = "공공자전거 실시간 대여정보"
 
         refreshControlConfiguration()
@@ -32,6 +38,23 @@ class ViewController: UITableViewController {
         getData()
     }
     
+    @objc func test() {
+//        DispatchQueue.global(qos: .background).async { [weak self] in
+//            guard let self = self else { return }
+//            self.getOpenWeather.getWeatherInfo(lat: 37.6215, lon: 127.0598, completion: { [weak self] result in
+//                guard let self = self else { return }
+//
+//                switch result {
+//                case let .success(result):
+//                    print("\(result.current.temp)°C")
+//
+//                case let .failure(NetworkError):
+//                    print(NetworkError)
+//                }
+//            })
+//        }
+    }
+
     func refreshControlConfiguration() {
         self.refreshControl = UIRefreshControl()
         let refreshControl = self.refreshControl!
@@ -41,15 +64,15 @@ class ViewController: UITableViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "당겨서 새로고침")
         refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
-    
+
     @objc func refresh() {
         DispatchQueue.global(qos: .background).async {
             print("새로고침")
-            self.fetchRentBikeStatus(of: "10/13")
+//            self.fetchRentBikeStatus(of: "10/400")
             // 저장된 변수값으로 고정해서 사용
         }
     }
-    
+
     func getData() {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let self = self else { return }
@@ -57,7 +80,7 @@ class ViewController: UITableViewController {
             // textField로 입력받은 값 사용
         }
     }
-    
+
     func fetchRentBikeStatus(of fetchedRentBikeStatus: String) {
         Observable.from([fetchedRentBikeStatus])
         // 배열의 인덱스를 하나하나 방출
@@ -89,22 +112,30 @@ class ViewController: UITableViewController {
             }
             throw SimpleError()
         } // MARK: - 배열만 뽑아내는 Tric
-        .map { objects -> [Row] in // compactMap: 1차원 배열에서 nil을 제거하고 옵셔널 바인딩
+        .map { objects -> [Row] in // compactMap: 1차원 배열에서 nil을 제거하고 옵셔널 바인딩 stationLatitude
             //throw SimpleError() //MARK: map안에서의 에러 표현
+            
 
             return objects.rentBikeStatus.row.compactMap { dic -> Row? in
 
-                print("each row: \(Row(rackTotCnt: dic.rackTotCnt, stationName: dic.stationName, parkingBikeTotCnt: dic.parkingBikeTotCnt, shared: dic.shared, stationLatitude: dic.stationLatitude, stationLongitude: dic.stationLongitude, stationID: dic.stationID))")
-                
+                print("each row's locaiton Info: \(dic.stationLatitude),\(dic.stationLongitude)")
+
                 return Row(rackTotCnt: dic.rackTotCnt, stationName: dic.stationName, parkingBikeTotCnt: dic.parkingBikeTotCnt, shared: dic.shared, stationLatitude: dic.stationLatitude, stationLongitude: dic.stationLongitude, stationID: dic.stationID)
             }
+        }
+        .flatMap { arrRow -> Observable<([Row], OpenWeather)> in
+            return self.getOpenWeather.getWeatherInfo2(lat: Double(arrRow.first!.stationLatitude)!, lon: Double(arrRow.first!.stationLongitude)!)
+                .map { openWeather -> ([Row], OpenWeather) in
+                    return (arrRow, openWeather)
+                }
         }
         .subscribe(on: ConcurrentDispatchQueueScheduler(queue: .global())) // Observable 자체 Thread 변경
         .observe(on: MainScheduler.instance) // 이후 subsribe의 Thread 변경
         .subscribe { event in // MARK: 에러처리에 용이한 subscribe 트릭
             switch event {
-            case .next(let newList):
+            case .next(let (newList, openWeather)):
                 self.row.onNext(newList)
+                print("\(openWeather.current.temp)")
                 self.refreshControl?.endRefreshing()
                 // BehaviorSubject에 이벤트 발생
                 self.tableView.reloadData()
@@ -115,16 +146,16 @@ class ViewController: UITableViewController {
                 print("completed")
             }
         }
-        .disposed(by: disposeBag)
+            .disposed(by: disposeBag)
     }
 
     @objc func plusBikeInfo() {
         let getStation = UIAlertController(title: "가져오기", message: "대여소 범위를 입력해주세요.", preferredStyle: .alert)
 
-        getStation.addTextField{ firstField in
+        getStation.addTextField { firstField in
             firstField.placeholder = "ex. 10"
         }
-        getStation.addTextField{ secondField in
+        getStation.addTextField { secondField in
             secondField.placeholder = "ex. 20"
         }
         let Action = UIAlertAction(title: "확인", style: .cancel, handler: {
