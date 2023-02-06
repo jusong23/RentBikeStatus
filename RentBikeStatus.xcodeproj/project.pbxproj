@@ -58,7 +58,6 @@
 		75280000299082A8004F3448 /* RentBikeStatus */ = {
 			isa = PBXGroup;
 			children = (
-				75280017299083D5004F3448 /* Network */,
 				75280016299083CE004F3448 /* Model */,
 				75280015299083C8004F3448 /* Cell */,
 				75280001299082A8004F3448 /* AppDelegate.swift */,
@@ -86,13 +85,6 @@
 				75280018299083ED004F3448 /* RentBikeStatus.swift */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		75280017299083D5004F3448 /* Network */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Network;
 			sourceTree = "<group>";
 		};
 		7528FFF5299082A8004F3448 = {
